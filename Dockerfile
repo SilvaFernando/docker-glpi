@@ -1,8 +1,9 @@
 #Necessário ajustar as crons
 FROM debian
+LABEL Fernando Dias da Silva
 
 RUN apt update -y && apt install cron nano wget apache2 -y
-RUN apt install php php-curl php-gd php-cli php-mbstring php-mysql php-xml -y
+RUN apt install php php-curl php-gd php-cli php-mbstring php-mysql php-xml php-bz2 php-zip -y
 RUN apt install php-cli php-cas php-imap php-ldap php-xmlrpc php-soap php-snmp php-apcu php-intl -y
 
 RUN cd /tmp
@@ -12,17 +13,9 @@ RUN chown -R www-data:www-data glpi && mv glpi /usr/share/.
 RUN mkdir /etc/glpi && chown -R www-data:www-data /etc/glpi && chmod 775 /etc/glpi
 RUN mkdir /var/lib/glpi && mkdir /var/lib/glpi/files 
 RUN mkdir /var/log/glpi && chown -R www-data:www-data /var/log/glpi
-RUN mkdir /var/lib/glpi/files/_cron
-RUN mkdir /var/lib/glpi/files/data-documents
-RUN mkdir /var/lib/glpi/files/_dumps
-RUN mkdir /var/lib/glpi/files/_graphs
-RUN mkdir /var/lib/glpi/files/_lock
-RUN mkdir /var/lib/glpi/files/_pictures
-RUN mkdir /var/lib/glpi/files/_plugins
-RUN mkdir /var/lib/glpi/files/_rss
-RUN mkdir /var/lib/glpi/files/_sessions
-RUN mkdir /var/lib/glpi/files/_tmp
-RUN mkdir /var/lib/glpi/files/_uploads
+RUN mkdir /var/lib/glpi/files/_cache /var/lib/glpi/files/_cron /var/lib/glpi/files/data-documents /var/lib/glpi/files/_dumps
+RUN mkdir /var/lib/glpi/files/_graphs /var/lib/glpi/files/_lock /var/lib/glpi/files/_pictures /var/lib/glpi/files/_plugins
+RUN mkdir /var/lib/glpi/files/_rss /var/lib/glpi/files/_sessions /var/lib/glpi/files/_tmp /var/lib/glpi/files/_uploads
 RUN chown -R www-data:www-data /var/lib/glpi/files/.
 ADD https://github.com/glpi-project/glpi-inventory-plugin/releases/download/1.0.3/glpi-glpiinventory-1.0.3.tar.bz2 /usr/share/glpi/plugins
 ADD https://github.com/pluginsGLPI/datainjection/releases/download/2.11.2/glpi-datainjection-2.11.2.tar.bz2 /usr/share/glpi/plugins
@@ -35,7 +28,7 @@ RUN cd /usr/share/glpi/plugins && tar -xvf /usr/share/glpi/plugins/glpi-glpiinve
 RUN cd /usr/share/glpi/plugins && tar -xvf /usr/share/glpi/plugins/glpi-glpiinventory-1.0.3.tar.bz2 
 RUN cd /usr/share/glpi/plugins && tar -xvf /usr/share/glpi/plugins/glpi-oauthimap-1.4.1.tar.bz2 
 RUN cd /usr/share/glpi/plugins && tar -xvf /usr/share/glpi/plugins/glpi-news-1.10.4.tar.bz2
-RUN rm -Rf *.tar.bz2
+RUN cd /usr/share/glpi/plugins && rm -Rf *.bz2
 RUN echo '<VirtualHost *:80> \n \
         ServerAdmin webmaster@localhost \n \
         DocumentRoot /usr/share/glpi \n \
@@ -77,5 +70,9 @@ RUN echo "<?php" >> /usr/share/glpi/inc/downstream.php && \
     echo "define('GLPI_SYSTEM_CRON', true);" >> /usr/share/glpi/inc/downstream.php && \
     echo "" >> /usr/share/glpi/inc/downstream.php
 
-EXPOSE 80 443
+EXPOSE 80/TCP
+EXPOSE 443/TCP
+
 VOLUME [/var/lib/glpi/files /var/lib/glpi/marketplace /usr/share/glpi/marketplace /usr/share/glpi/plugins]
+ENTRYPOINT ["tail"]
+CMD ["-f","/dev/null"]
