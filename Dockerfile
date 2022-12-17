@@ -18,7 +18,7 @@ RUN mkdir /var/lib/glpi/files/_graphs /var/lib/glpi/files/_lock /var/lib/glpi/fi
 RUN mkdir /var/lib/glpi/files/_rss /var/lib/glpi/files/_sessions /var/lib/glpi/files/_tmp /var/lib/glpi/files/_uploads
 RUN chown -R www-data:www-data /var/lib/glpi/files/.
 ADD https://github.com/glpi-project/glpi-inventory-plugin/releases/download/1.0.3/glpi-glpiinventory-1.0.3.tar.bz2 /usr/share/glpi/plugins
-ADD https://github.com/pluginsGLPI/datainjection/releases/download/2.11.2/glpi-datainjection-2.11.2.tar.bz2 /usr/share/glpi/plugins
+ADDa https://github.com/pluginsGLPI/datainjection/releases/download/2.11.2/glpi-datainjection-2.11.2.tar.bz2 /usr/share/glpi/plugins
 ADD https://github.com/pluginsGLPI/formcreator/releases/download/2.13.0-rc.1/glpi-formcreator-2.13.0-rc.1.tar.bz2 /usr/share/glpi/plugins
 ADD https://github.com/pluginsGLPI/news/releases/download/1.10.4/glpi-news-1.10.4.tar.bz2 /usr/share/glpi/plugins
 ADD https://github.com/pluginsGLPI/oauthimap/releases/download/1.4.1/glpi-oauthimap-1.4.1.tar.bz2 /usr/share/glpi/plugins
